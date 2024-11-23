@@ -25,12 +25,12 @@ import lombok.Setter;
 @SequenceGenerator(name = "SQ_ITEM_PEDIDO", sequenceName = "FASTFOOD.SQ_ITEM_PEDIDO", allocationSize = 1, initialValue = 1)
 public class ItemPedidoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ITEM_PRODUTO")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ITEM_PEDIDO")
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "id_produto", nullable = false)
-    private Long produto;
+    private String produto;
 
     @ManyToOne
     @JoinColumn(name = "id_pedido")

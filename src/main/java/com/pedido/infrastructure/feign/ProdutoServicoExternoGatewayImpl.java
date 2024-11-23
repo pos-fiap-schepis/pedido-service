@@ -13,7 +13,7 @@ public class ProdutoServicoExternoGatewayImpl implements ProdutoServicoExternoGa
     private ProdutoServicoExterno produtoServicoExterno;
 
     @Override
-    public Produto getProdutoById(Long id) {
+    public Produto getProdutoById(String id) {
         return ProdutoConverter.converterDtoToProduto(produtoServicoExterno.findById(id));
     }
 }

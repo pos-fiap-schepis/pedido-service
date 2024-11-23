@@ -20,6 +20,9 @@ public class Pedido {
 
     private List<ItemPedido> itens;
 
+    public Pedido() {
+    }
+
     public Pedido(Long id,
                   Long clienteId,
                   BigDecimal valor,

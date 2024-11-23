@@ -5,14 +5,15 @@ import com.pedido.infrastructure.dtos.ProdutoDto;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "produto-servico", url = "http://localhost:8081")
 public interface ProdutoServicoExterno {
 
-    @GetMapping("/produto/{id}")
-    ProdutoDto findById(Long id);
+    @GetMapping("/api/produtos/{id}/produto")
+    ProdutoDto findById(@PathVariable("id") String id);
 
-    @GetMapping("/produto/{categoria}")
+    @GetMapping("/api/produtos/{categoria}")
     List<ProdutoDto> findByCategoria(ProdutoCategoriaEnum categoria);
 
 }

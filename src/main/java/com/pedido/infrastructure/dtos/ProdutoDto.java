@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 public class ProdutoDto {
 
-    private Long id;
+    private String id;
 
     private String nome;
 
@@ -15,11 +15,11 @@ public class ProdutoDto {
 
     private ProdutoCategoriaEnum categoria;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

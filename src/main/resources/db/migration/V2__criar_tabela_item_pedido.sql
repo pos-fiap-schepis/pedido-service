@@ -8,7 +8,7 @@ CREATE SEQUENCE sq_item_pedido
 CREATE TABLE item_pedido
 (
     id         BIGINT PRIMARY KEY,
-    id_produto BIGINT  NOT NULL,
+    id_produto VARCHAR(255)  NOT NULL,
     id_pedido  BIGINT  NOT NULL,
     quantidade INTEGER NOT NULL
 );
@@ -22,4 +22,4 @@ COMMENT ON COLUMN item_pedido.quantidade IS 'Quantidade do produto no item do pe
 
 COMMENT ON TABLE item_pedido IS 'Tabela que armazena informações dos itens dos pedidos';
 
-COMMENT ON TABLE sq_item_pedido IS 'Sequência usada para gerar IDs únicos para a tabela de itens dos pedidos';
+COMMENT ON SEQUENCE sq_item_pedido IS 'Sequência usada para gerar IDs únicos para a tabela de itens dos pedidos';

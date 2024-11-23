@@ -5,13 +5,16 @@ import java.math.BigDecimal;
 
 public class Produto {
 
-    Long id;
+    String id;
     String nome;
     String descricao;
     BigDecimal valor;
     ProdutoCategoriaEnum categoria;
 
-    public Produto(Long id, String nome, String descricao, BigDecimal valor, ProdutoCategoriaEnum categoria) {
+    public Produto() {
+    }
+
+    public Produto(String id, String nome, String descricao, BigDecimal valor, ProdutoCategoriaEnum categoria) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -27,13 +30,13 @@ public class Produto {
     }
 
     public static class Builder {
-        private Long id;
+        private String id;
         private String nome;
         private String descricao;
         private BigDecimal valor;
         private ProdutoCategoriaEnum categoria;
 
-        public Builder id(Long id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
@@ -63,11 +66,11 @@ public class Produto {
         }
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

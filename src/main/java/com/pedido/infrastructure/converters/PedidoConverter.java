@@ -11,19 +11,18 @@ import com.pedido.infrastructure.repositories.pedido.PedidoEntity;
 import com.pedido.infrastructure.repositories.pedido.PedidoRepository;
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PedidoConverter {
 
+    @Autowired
     private PedidoRepository pedidoRepository;
 
+    @Autowired
     private ProdutoServicoExterno produtoServicoExterno;
 
-    public PedidoConverter(PedidoRepository pedidoRepository, ProdutoServicoExterno produtoServicoExterno) {
-        this.pedidoRepository = pedidoRepository;
-        this.produtoServicoExterno = produtoServicoExterno;
-    }
 
     public static ItemPedido converterAdicionarItemCommandToItemPedido(AdicionarItemCommand adicionarItemCommand, Long pedidoId) {
         return new ItemPedido.Builder()

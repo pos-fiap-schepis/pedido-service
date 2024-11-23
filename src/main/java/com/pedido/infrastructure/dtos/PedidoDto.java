@@ -20,4 +20,5 @@ public record PedidoDto(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy: HH:mm")
         LocalDateTime dataHoraEntrega,
         List<ItemPedidoDto> itens) {
+
 }

@@ -1,4 +1,4 @@
-package com.pedido.infrastructure.presenters;
+package com.pedido.infrastructure.controllers.presenters;
 
 import com.pedido.core.entities.Pedido;
 import com.pedido.infrastructure.dtos.ItemPedidoDto;

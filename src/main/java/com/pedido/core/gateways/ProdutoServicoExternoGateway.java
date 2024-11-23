@@ -4,6 +4,5 @@ import com.pedido.core.entities.Produto;
 
 public interface ProdutoServicoExternoGateway {
 
-    Produto getProdutoById(Long id);
-
+    Produto getProdutoById(String id);
 }

@@ -3,11 +3,14 @@ package com.pedido.core.entities;
 public class ItemPedido {
 
     private Long id;
-    private Long produtoId;
+    private String produtoId;
     private Long pedidoId;
     private Integer quantidade;
 
-    public ItemPedido(Long id, Long produtoId, Long pedidoId, Integer quantidade) {
+    public ItemPedido() {
+    }
+
+    public ItemPedido(Long id, String produtoId, Long pedidoId, Integer quantidade) {
         this.id = id;
         this.produtoId = produtoId;
         this.pedidoId = pedidoId;
@@ -22,11 +25,11 @@ public class ItemPedido {
         this.id = id;
     }
 
-    public Long getProdutoId() {
+    public String getProdutoId() {
         return produtoId;
     }
 
-    public void setProdutoId(Long produtoId) {
+    public void setProdutoId(String produtoId) {
         this.produtoId = produtoId;
     }
 
@@ -48,7 +51,7 @@ public class ItemPedido {
 
     public static class Builder {
         private Long id;
-        private Long produtoId;
+        private String produtoId;
         private Long pedidoId;
         private Integer quantidade;
 
@@ -57,7 +60,7 @@ public class ItemPedido {
             return this;
         }
 
-        public Builder produto(Long produtoId) {
+        public Builder produto(String produtoId) {
             this.produtoId = produtoId;
             return this;
         }

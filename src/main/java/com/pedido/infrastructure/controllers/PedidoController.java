@@ -7,7 +7,7 @@ import com.pedido.infrastructure.controllers.commands.CriarPedidoCommand;
 import com.pedido.infrastructure.controllers.commands.RemoverItemCommand;
 import com.pedido.infrastructure.converters.PedidoConverter;
 import com.pedido.infrastructure.dtos.PedidoDto;
-import com.pedido.infrastructure.presenters.PedidoPresenter;
+import com.pedido.infrastructure.controllers.presenters.PedidoPresenter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
