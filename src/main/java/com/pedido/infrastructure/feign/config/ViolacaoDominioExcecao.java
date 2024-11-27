@@ -1,4 +1,4 @@
-package com.pedido.infrastructure.feign;
+package com.pedido.infrastructure.feign.config;
 
 public class ViolacaoDominioExcecao extends RuntimeException {
 

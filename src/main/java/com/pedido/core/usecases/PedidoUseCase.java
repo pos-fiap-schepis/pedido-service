@@ -1,10 +1,12 @@
 package com.pedido.core.usecases;
 
+import com.pedido.core.entities.Cliente;
 import com.pedido.core.entities.ItemPedido;
 import com.pedido.core.entities.Pedido;
 import com.pedido.core.entities.Produto;
 import com.pedido.core.enums.StatusPedidoEnum;
 import com.pedido.core.exceptions.BusinessException;
+import com.pedido.core.gateways.ClienteServicoExternoGateway;
 import com.pedido.core.gateways.NotificacaoSonoraGateway;
 import com.pedido.core.gateways.PagamentoServicoExternoGateway;
 import com.pedido.core.gateways.PedidoRepositoryGateway;
@@ -31,15 +33,18 @@ public class PedidoUseCase implements PedidoServiceGateway {
 
     private final PedidoRepositoryGateway pedidoRepositoryGateway;
 
+    private ClienteServicoExternoGateway clienteServicoExternoGateway;
+
     private final ProdutoServicoExternoGateway produtoServicoExternoGateway;
 
     private final PagamentoServicoExternoGateway pagamentoServicoExternoGateway;
 
     private final NotificacaoSonoraGateway notificacaoSonoraGateway;
 
-    public PedidoUseCase(PedidoRepositoryGateway pedidoRepositoryGateway, ProdutoServicoExternoGateway produtoServicoExternoGateway,
+    public PedidoUseCase(PedidoRepositoryGateway pedidoRepositoryGateway, ProdutoServicoExternoGateway produtoServicoExternoGateway, ClienteServicoExternoGateway clienteServicoExternoGateway,
                          PagamentoServicoExternoGateway pagamentoServicoExterno, NotificacaoSonoraGateway notificacaoSonoraGateway) {
         this.pedidoRepositoryGateway = pedidoRepositoryGateway;
+        this.clienteServicoExternoGateway = clienteServicoExternoGateway;
         this.produtoServicoExternoGateway = produtoServicoExternoGateway;
         this.pagamentoServicoExternoGateway = pagamentoServicoExterno;
         this.notificacaoSonoraGateway = notificacaoSonoraGateway;
@@ -50,6 +55,13 @@ public class PedidoUseCase implements PedidoServiceGateway {
         if (pedido.getClienteId() == null) {
             throw new BusinessException("O cliente é obrigatório!");
         }
+
+        Cliente cliente = clienteServicoExternoGateway.getClienteById(pedido.getClienteId());
+
+        if (isNull(cliente)) {
+            throw new BusinessException("Cliente não encontrado!");
+        }
+
         iniciarPedido(pedido);
         return pedidoRepositoryGateway.salvar(pedido);
     }

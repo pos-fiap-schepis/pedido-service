@@ -1,6 +1,7 @@
 package com.pedido.infrastructure;
 
 
+import com.pedido.core.gateways.ClienteServicoExternoGateway;
 import com.pedido.core.gateways.NotificacaoSonoraGateway;
 import com.pedido.core.gateways.PagamentoServiceGateway;
 import com.pedido.core.gateways.PagamentoServicoExternoGateway;
@@ -17,9 +18,9 @@ public class BeanConfiguration {
 
 
     @Bean
-    public PedidoServiceGateway pedidoServiceImpl(PedidoRepositoryGateway pedidoRepositoryGateway, ProdutoServicoExternoGateway produtoServiceExternoGateway,
+    public PedidoServiceGateway pedidoServiceImpl(PedidoRepositoryGateway pedidoRepositoryGateway, ProdutoServicoExternoGateway produtoServiceExternoGateway, ClienteServicoExternoGateway clienteServicoExternoGateway,
                                                   PagamentoServicoExternoGateway pagamentoServicoExternoGateway, NotificacaoSonoraGateway notificacaoSonoraGateway) {
-        return new PedidoUseCase(pedidoRepositoryGateway, produtoServiceExternoGateway, pagamentoServicoExternoGateway, notificacaoSonoraGateway);
+        return new PedidoUseCase(pedidoRepositoryGateway, produtoServiceExternoGateway, clienteServicoExternoGateway, pagamentoServicoExternoGateway, notificacaoSonoraGateway);
     }
 
     @Bean

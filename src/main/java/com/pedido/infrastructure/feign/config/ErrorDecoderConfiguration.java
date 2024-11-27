@@ -1,4 +1,4 @@
-package com.pedido.infrastructure.feign;
+package com.pedido.infrastructure.feign.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

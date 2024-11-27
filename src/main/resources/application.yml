@@ -15,7 +15,7 @@ spring:
 #    hibernate:
 #      ddl-auto: create
   flyway:
-    schemas: fastfood
+    schemas: pedido
     url: jdbc:postgresql://localhost:5432/fastfood
     user: postgres
     password: postgres
@@ -32,3 +32,6 @@ cors:
 
 context:
   url: http://localhost:8080
+
+server:
+  port: 8082

@@ -21,8 +21,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ITEM_PEDIDO", schema = "FASTFOOD")
-@SequenceGenerator(name = "SQ_ITEM_PEDIDO", sequenceName = "FASTFOOD.SQ_ITEM_PEDIDO", allocationSize = 1, initialValue = 1)
+@Table(name = "ITEM_PEDIDO", schema = "PEDIDO")
+@SequenceGenerator(name = "SQ_ITEM_PEDIDO", sequenceName = "PEDIDO.SQ_ITEM_PEDIDO", allocationSize = 1, initialValue = 1)
 public class ItemPedidoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ITEM_PEDIDO")

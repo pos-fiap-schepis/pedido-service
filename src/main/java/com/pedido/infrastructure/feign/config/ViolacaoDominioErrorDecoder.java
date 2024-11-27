@@ -1,4 +1,4 @@
-package com.pedido.infrastructure.feign;
+package com.pedido.infrastructure.feign.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;

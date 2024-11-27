@@ -29,8 +29,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "PEDIDO", schema = "FASTFOOD")
-@SequenceGenerator(name = "SQ_PEDIDO", sequenceName = "FASTFOOD.SQ_PEDIDO", allocationSize = 1, initialValue = 1)
+@Table(name = "PEDIDO", schema = "PEDIDO")
+@SequenceGenerator(name = "SQ_PEDIDO", sequenceName = "PEDIDO.SQ_PEDIDO", allocationSize = 1, initialValue = 1)
 public class PedidoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_PEDIDO")
