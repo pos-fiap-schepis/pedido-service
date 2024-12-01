@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend-pedido-api
-          image: 566814225519.dkr.ecr.us-east-1.amazonaws.com/pos-fiap-schepis/pedido-api:latest
+          image: 975714002932.dkr.ecr.us-east-1.amazonaws.com/pos-fiap-schepis/pedido-service:latest
           ports:
             - containerPort: 8080
           resources:
@@ -30,7 +30,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
             - name: RDS_HOSTNAME
-              value: postgres-db-pedido.cyphli9ppjwj.us-east-1.rds.amazonaws.com
+              value: postgres-db-fast-food.cyphli9ppjwj.us-east-1.rds.amazonaws.com
             - name: RDS_PORT
               value: "5432"
             - name: RDS_USERNAME
