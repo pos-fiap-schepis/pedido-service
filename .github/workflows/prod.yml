@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build and Push Docker Image to ECR
+    name: Build and Push Docker Image to ECR 2
     runs-on: ubuntu-latest
 
     steps:
@@ -32,11 +32,35 @@ jobs:
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+
+      - name: Check if repository exists
+        id: check_repo
+        run: |
+          REPO_NAME="${{ github.repository }}"
+          if aws ecr describe-repositories --repository-names "$REPO_NAME" > /dev/null 2>&1; then
+            echo "Repository exists: $REPO_NAME"
+            echo "::set-output name=exists::true"
+          else
+            echo "Repository does not exist: $REPO_NAME"
+            echo "::set-output name=exists::false"
+          fi
+
+      - name: Create repository if it doesn't exist
+        if: steps.check_repo.outputs.exists == 'false'
+        run: |
+          REPO_NAME="${{ github.event.inputs.project_name }}"
+          aws ecr create-repository --repository-name "$REPO_NAME"
+          echo "Created repository: $REPO_NAME"          
 
       - name: Build Docker image
         run: |
           docker build -t ${{ github.repository }}:${{ github.sha }} .
-          docker tag ${{ github.repository }}:${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          docker tag ${{ github.repository }}:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest                
 
       - name: Push Docker image to ECR
         run: |
@@ -59,24 +83,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      - name: Retrieve RDS Endpoint
-        id: rds_endpoint
-        run: |
-          RDS_HOSTNAME=$(aws rds describe-db-instances --db-instance-identifier postgres-db-fast-food --query "DBInstances[0].Endpoint.Address" --output text)
-          echo "RDS_HOSTNAME=$RDS_HOSTNAME" >> $GITHUB_ENV
-
       - name: Update kubeconfig for EKS
         run: |
           aws eks update-kubeconfig --name pedido-eks-cluster --region ${{ secrets.AWS_REGION }}
 
       - name: Apply Kubernetes configurations
         run: |
-          sed "s/{{RDS_HOSTNAME}}/${RDS_HOSTNAME}/g" k8s/pod-pedido-api.yaml | kubectl apply -f -
           kubectl apply -f k8s/config-map-postgres.yaml
           kubectl apply -f k8s/hpa-pedido-api.yaml
           kubectl apply -f k8s/metrics.yaml
+          kubectl apply -f k8s/pod-pedido-api.yaml
           kubectl apply -f k8s/svc-pedido-api.yaml
 
       - name: Update pedido-api image
         run: |
-          kubectl set image deployment/pedido-api backend-pedido-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          kubectl set image deployment/pod-pedido-api backend-pedido-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
