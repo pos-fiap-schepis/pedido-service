@@ -2,7 +2,7 @@ spring:
   application:
     name: pedido-service
   datasource:
-    url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/fastfood?currentSchema=pedido
+    url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/pedido?currentSchema=pedido
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
 
@@ -14,7 +14,7 @@ spring:
       ddl-auto: update
   flyway:
     schemas: pedido
-    url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/fastfood?currentSchema=pedido
+    url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/pedido?currentSchema=pedido
     user: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
 
