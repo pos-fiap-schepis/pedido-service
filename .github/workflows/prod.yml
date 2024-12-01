@@ -20,7 +20,7 @@ jobs:
           java-version: "17"
 
       - name: Fazendo build do projeto
-        run: mvn clean install -DskipTests
+        run: mvn clean install
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
