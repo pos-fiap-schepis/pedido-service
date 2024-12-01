@@ -41,7 +41,7 @@ jobs:
       - name: Check if repository exists
         id: check_repo
         run: |
-          REPO_NAME="${{ github.event.inputs.project_name }}"
+          REPO_NAME="${{ github.repository }}"
           if aws ecr describe-repositories --repository-names "$REPO_NAME" > /dev/null 2>&1; then
             echo "Repository exists: $REPO_NAME"
             echo "::set-output name=exists::true"
@@ -53,7 +53,7 @@ jobs:
       - name: Create repository if it doesn't exist
         if: steps.check_repo.outputs.exists == 'false'
         run: |
-          REPO_NAME="${{ github.event.inputs.project_name }}"
+          REPO_NAME="${{ github.repository }}"
           aws ecr create-repository --repository-name "$REPO_NAME"
           echo "Created repository: $REPO_NAME"          
 
