@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build and Push Docker Image to ECR
+    name: Build and Push Docker Image to ECR 2
     runs-on: ubuntu-latest
 
     steps:
@@ -32,23 +32,30 @@ jobs:
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 
       - name: Check if repository exists
         id: check_repo
         run: |
-          REPO_NAME="pos-fiap-schepis/${{ github.repository }}"
+          REPO_NAME="${{ github.event.inputs.project_name }}"
           if aws ecr describe-repositories --repository-names "$REPO_NAME" > /dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_ENV
+            echo "Repository exists: $REPO_NAME"
+            echo "::set-output name=exists::true"
           else
-            echo "exists=false" >> $GITHUB_ENV
+            echo "Repository does not exist: $REPO_NAME"
+            echo "::set-output name=exists::false"
           fi
 
       - name: Create repository if it doesn't exist
-        if: env.exists == 'false'
+        if: steps.check_repo.outputs.exists == 'false'
         run: |
-          REPO_NAME="pos-fiap-schepis/${{ github.repository }}"
+          REPO_NAME="${{ github.event.inputs.project_name }}"
           aws ecr create-repository --repository-name "$REPO_NAME"
-          echo "Created repository: $REPO_NAME"
+          echo "Created repository: $REPO_NAME"          
 
       - name: Build Docker image
         run: |
@@ -90,4 +97,4 @@ jobs:
 
       - name: Update pedido-api image
         run: |
-          kubectl set image deployment/pedido-api backend-pedido-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          kubectl set image deployment/pod-pedido-api backend-pedido-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
