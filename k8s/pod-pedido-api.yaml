@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-pedido-api
+  labels:
+    app: pod-pedido-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-pedido-api
+  template:
+    metadata:
+      labels:
+        app: pod-pedido-api
+    spec:
+      containers:
+        - name: backend-pedido-api
+          image: 566814225519.dkr.ecr.us-east-1.amazonaws.com/pos-fiap-schepis/pedido-api:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: RDS_HOSTNAME
+              value: postgres-db-pedido.cyphli9ppjwj.us-east-1.rds.amazonaws.com
+            - name: RDS_PORT
+              value: "5432"
+            - name: RDS_USERNAME
+              value: postgres
+            - name: RDS_PASSWORD
+              value: postgres
+            - name: PROFILE
+              value: prd
