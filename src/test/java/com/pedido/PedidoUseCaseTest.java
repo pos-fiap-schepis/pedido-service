@@ -1,14 +1,12 @@
 package com.pedido;
 
+import com.pedido.core.entities.Cliente;
 import com.pedido.core.entities.ItemPedido;
 import com.pedido.core.entities.Pedido;
 import com.pedido.core.entities.Produto;
 import com.pedido.core.enums.StatusPedidoEnum;
 import com.pedido.core.exceptions.BusinessException;
-import com.pedido.core.gateways.NotificacaoSonoraGateway;
-import com.pedido.core.gateways.PagamentoServicoExternoGateway;
-import com.pedido.core.gateways.PedidoRepositoryGateway;
-import com.pedido.core.gateways.ProdutoServicoExternoGateway;
+import com.pedido.core.gateways.*;
 import com.pedido.core.usecases.PedidoUseCase;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +37,9 @@ class PedidoUseCaseTest {
     @Mock
     private NotificacaoSonoraGateway notificacaoSonoraGateway;
 
+    @Mock
+    private ClienteServicoExternoGateway clienteServicoExternoGateway;
+
     @InjectMocks
     private PedidoUseCase pedidoUseCase;
 
@@ -51,6 +52,12 @@ class PedidoUseCaseTest {
     void testSalvar() {
         Pedido pedido = new Pedido();
         pedido.setClienteId(1L);
+        when(pedidoRepositoryGateway.salvar(any(Pedido.class))).thenReturn(pedido);
+
+        pedido.setClienteId(1L);
+        Cliente cliente = new Cliente(1L, "Nome", "", "");
+
+        when(clienteServicoExternoGateway.getClienteById(1L)).thenReturn(cliente);
         when(pedidoRepositoryGateway.salvar(any(Pedido.class))).thenReturn(pedido);
 
         Pedido result = pedidoUseCase.salvar(pedido);

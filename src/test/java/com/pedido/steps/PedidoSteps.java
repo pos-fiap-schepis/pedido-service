@@ -1,7 +1,9 @@
 package com.pedido.steps;
 
+import com.pedido.core.entities.Cliente;
 import com.pedido.core.entities.Pedido;
 import com.pedido.core.exceptions.BusinessException;
+import com.pedido.core.gateways.ClienteServicoExternoGateway;
 import com.pedido.core.gateways.PedidoRepositoryGateway;
 import com.pedido.core.usecases.PedidoUseCase;
 import io.cucumber.java.Before;
@@ -21,11 +23,16 @@ public class PedidoSteps {
     @Mock
     private PedidoRepositoryGateway pedidoRepositoryGateway;
 
+    @Mock
+    private ClienteServicoExternoGateway clienteServicoExternoGateway;
+
     @InjectMocks
     private PedidoUseCase pedidoUseCase;
 
     private Pedido pedido;
     private Exception exception;
+
+    private Cliente cliente;
 
     @Before("")
     public void setUp() {
@@ -36,6 +43,8 @@ public class PedidoSteps {
     public void umPedidoValido() {
         pedido = new Pedido();
         pedido.setClienteId(1L);
+        cliente = new Cliente(1L, "Nome", "", "");
+        when(clienteServicoExternoGateway.getClienteById(1L)).thenReturn(cliente);
         // Adicione outros atributos necessários
     }
 
