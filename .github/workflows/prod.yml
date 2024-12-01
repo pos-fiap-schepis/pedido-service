@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build and Push Docker Image to ECR 2
+    name: Build and Push Docker Image to ECR
     runs-on: ubuntu-latest
 
     steps:
@@ -30,13 +30,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
+      - name: Retrieve AWS Account ID
+        id: aws_account
+        run: |
+          aws_account_id=$(aws sts get-caller-identity --query "Account" --output text)
+          echo "AWS_ACCOUNT_ID=$aws_account_id" >> $GITHUB_ENV
+
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
 
       - name: Check if repository exists
         id: check_repo
@@ -53,18 +54,18 @@ jobs:
       - name: Create repository if it doesn't exist
         if: steps.check_repo.outputs.exists == 'false'
         run: |
-          REPO_NAME="${{ github.event.inputs.project_name }}"
+          REPO_NAME="${{ github.repository }}"
           aws ecr create-repository --repository-name "$REPO_NAME"
-          echo "Created repository: $REPO_NAME"          
+          echo "Created repository: $REPO_NAME"
 
       - name: Build Docker image
         run: |
           docker build -t ${{ github.repository }}:${{ github.sha }} .
-          docker tag ${{ github.repository }}:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest                
+          docker tag ${{ github.repository }}:${{ github.sha }} $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
 
   deploy:
     name: Deploy to EKS Cluster
@@ -97,4 +98,4 @@ jobs:
 
       - name: Update pedido-api image
         run: |
-          kubectl set image deployment/pod-pedido-api backend-pedido-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          kubectl set image deployment/pod-pedido-api backend-pedido-api=$AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
