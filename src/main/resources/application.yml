@@ -4,7 +4,7 @@ spring:
   application:
     name: pedido-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/fastfood
+    url: jdbc:postgresql://localhost:5432/pedido
     username: postgres
     password: postgres
 
@@ -16,7 +16,7 @@ spring:
 #      ddl-auto: create
   flyway:
     schemas: pedido
-    url: jdbc:postgresql://localhost:5432/fastfood
+    url: jdbc:postgresql://localhost:5432/pedido
     user: postgres
     password: postgres
     locations: classpath:db/migration

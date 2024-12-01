@@ -65,16 +65,16 @@ jobs:
 
       - name: Update kubeconfig for EKS
         run: |
-          aws eks update-kubeconfig --name fast-food-eks-cluster --region ${{ secrets.AWS_REGION }}
+          aws eks update-kubeconfig --name pedido-eks-cluster --region ${{ secrets.AWS_REGION }}
 
       - name: Apply Kubernetes configurations
         run: |
           kubectl apply -f k8s/config-map-postgres.yaml
-          kubectl apply -f k8s/hpa-fast-food-api.yaml
+          kubectl apply -f k8s/hpa-pedido-api.yaml
           kubectl apply -f k8s/metrics.yaml
-          kubectl apply -f k8s/pod-fast-food-api.yaml
-          kubectl apply -f k8s/svc-fast-food-api.yaml
+          kubectl apply -f k8s/pod-pedido-api.yaml
+          kubectl apply -f k8s/svc-pedido-api.yaml
 
-      - name: Update fast-food-api image
+      - name: Update pedido-api image
         run: |
-          kubectl set image deployment/pod-fast-food-api backend-fast-food-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          kubectl set image deployment/pod-pedido-api backend-pedido-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
