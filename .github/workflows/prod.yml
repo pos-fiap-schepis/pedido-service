@@ -33,8 +33,9 @@ jobs:
       - name: Retrieve AWS Account ID
         id: aws_account
         run: |
-          aws_account_id=$(aws sts get-caller-identity --query "Account" --output text)
-          echo "AWS_ACCOUNT_ID=$aws_account_id" >> $GITHUB_ENV
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+          echo $AWS_ACCOUNT_ID
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -60,6 +61,7 @@ jobs:
 
       - name: Build Docker image
         run: |
+          echo $AWS_ACCOUNT_ID
           docker build -t ${{ github.repository }}:${{ github.sha }} .
           docker tag ${{ github.repository }}:${{ github.sha }} $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
 
