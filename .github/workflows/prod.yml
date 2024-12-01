@@ -85,7 +85,7 @@ jobs:
 
       - name: Update kubeconfig for EKS
         run: |
-          aws eks update-kubeconfig --name pedido-eks-cluster --region ${{ secrets.AWS_REGION }}
+          aws eks update-kubeconfig --name fast-food-eks-cluster --region ${{ secrets.AWS_REGION }}
 
       - name: Apply Kubernetes configurations
         run: |
