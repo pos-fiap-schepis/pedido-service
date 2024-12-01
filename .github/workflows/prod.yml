@@ -1,4 +1,4 @@
-name: Deploy aplicacao fast food
+name: Deploy aplicacao pedido
 
 on:
   push:
