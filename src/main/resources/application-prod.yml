@@ -5,6 +5,7 @@ spring:
     url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/pedido?currentSchema=pedido
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     database: Postgresql
