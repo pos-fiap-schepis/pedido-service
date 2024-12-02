@@ -88,12 +88,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      - name: Retrieve RDS Endpoint
+      - name: Retrieve RDS Endpoint and Update YAML
         id: rds_endpoint
         run: |
           RDS_HOSTNAME=$(aws rds describe-db-instances --db-instance-identifier postgres-db-fast-food --query "DBInstances[0].Endpoint.Address" --output text)
-          yq eval ".spec.template.spec.containers[0].env[] | select(.name == \"RDS_HOSTNAME\").value = env(RDS_HOSTNAME)" -i k8s/pod-pedido-api.yaml
-          echo "RDS_HOSTNAME=$RDS_HOSTNAME" >> $GITHUB_ENV
+          export RDS_HOSTNAME
+          echo "Updating RDS_HOSTNAME in pod-pedido-api.yaml"
+          yq eval ".spec.template.spec.containers[0].env |= map(if .name == \"RDS_HOSTNAME\" then .value = env(RDS_HOSTNAME) else . end)" -i k8s/pod-pedido-api.yaml
 
       - name: Update kubeconfig for EKS
         run: |
@@ -107,16 +108,7 @@ jobs:
           kubectl apply -f k8s/pod-pedido-api.yaml
           kubectl apply -f k8s/svc-pedido-api.yaml
 
-      - name: Set ECR Path Variable
-        id: ecr_path
-        run: |
-          ECR_PATH=$(aws ecr describe-repositories --repository-names "${{ github.repository }}" --query "repositories[0].repositoryUri" --output text)
-          echo "ECR_PATH=$ECR_PATH" >> $GITHUB_ENV
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      - name: Update pedido-api image
+      - name: Update pedido-api image in deployment
         run: |
           echo "Updating deployment image to $ECR_PATH:latest"
           kubectl set image deployment/pod-pedido-api backend-pedido-api=$ECR_PATH:latest
