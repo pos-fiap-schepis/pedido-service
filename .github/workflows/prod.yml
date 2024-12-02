@@ -94,7 +94,7 @@ jobs:
           RDS_HOSTNAME=$(aws rds describe-db-instances --db-instance-identifier postgres-db-fast-food --query "DBInstances[0].Endpoint.Address" --output text)
           export RDS_HOSTNAME
           echo "Updating RDS_HOSTNAME in pod-pedido-api.yaml"
-          yq eval ".spec.template.spec.containers[0].env |= map(if .name == \"RDS_HOSTNAME\" then .value = env(RDS_HOSTNAME) else . end)" -i k8s/pod-pedido-api.yaml
+          yq eval '.spec.template.spec.containers[0].env |= map(select(.name == "RDS_HOSTNAME") | .value = env(RDS_HOSTNAME))' -i k8s/pod-pedido-api.yaml
 
       - name: Update kubeconfig for EKS
         run: |
