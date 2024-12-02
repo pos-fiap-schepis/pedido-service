@@ -88,12 +88,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
+      - name: Retrieve RDS Endpoint
+        id: rds_endpoint
+        run: |
+          RDS_HOSTNAME=$(aws rds describe-db-instances --db-instance-identifier postgres-db-fast-food --query "DBInstances[0].Endpoint.Address" --output text)
+          echo "RDS_HOSTNAME=$RDS_HOSTNAME" >> $GITHUB_ENV
+
       - name: Update kubeconfig for EKS
         run: |
           aws eks update-kubeconfig --name fast-food-eks-cluster --region ${{ secrets.AWS_REGION }}
 
       - name: Apply Kubernetes configurations
         run: |
+          sed "s/{{RDS_HOSTNAME}}/${RDS_HOSTNAME}/g" k8s/pod-pedido-api.yaml | kubectl apply -f -
           kubectl apply -f k8s/config-map-postgres.yaml
           kubectl apply -f k8s/hpa-pedido-api.yaml
           kubectl apply -f k8s/metrics.yaml
