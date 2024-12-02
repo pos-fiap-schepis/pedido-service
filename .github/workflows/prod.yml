@@ -28,7 +28,7 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
       - name: Check if repository exists
-      id: check_repo
+        id: check_repo
         run: |
           if aws ecr describe-repositories --repository-names "${{ github.repository }}" > /dev/null 2>&1; then
             echo "Repository exists: ${{ github.repository }}"
