@@ -34,9 +34,9 @@ jobs:
       - name: Retrieve AWS Account ID
         id: aws_account
         run: |
-          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
-          echo "Account ID: $AWS_ACCOUNT_ID"
+          ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
+          echo "Account ID: $ACCOUNT_ID"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -69,14 +69,14 @@ jobs:
 
       - name: Build Docker image
         run: |
-          echo "Building Docker image with Account ID: $AWS_ACCOUNT_ID"
+          echo "Building Docker image with Account ID: $ACCOUNT_ID"
           docker build -t ${{ github.repository }}:${{ github.sha }} .
-          docker tag ${{ github.repository }}:${{ github.sha }} $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          docker tag ${{ github.repository }}:${{ github.sha }} $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
 
       - name: Push Docker image to ECR
         run: |
-          echo "Pushing Docker image to $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          echo "Pushing Docker image to $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+          docker push $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
 
   deploy:
     name: Deploy to EKS Cluster
@@ -109,5 +109,5 @@ jobs:
 
       - name: Update pedido-api image
         run: |
-          echo "Updating deployment image to $AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest"
-          kubectl set image deployment/pod-pedido-api backend-pedido-api=$AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          echo "Updating deployment image to $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest"
+          kubectl set image deployment/pod-pedido-api backend-pedido-api=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
