@@ -36,6 +36,7 @@ jobs:
           else
             echo "Repository does not exist: ${{ github.repository }}"
             echo "exists=false" >> $GITHUB_ENV
+          fi  
   
       - name: Create repository if it doesn't exist
         if: env.exists == 'false'
@@ -54,8 +55,6 @@ jobs:
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-
-      
 
       - name: Build Docker image
         run: |
