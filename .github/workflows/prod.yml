@@ -4,10 +4,6 @@ on:
   push:
     branches: [main]
 
-
-env:
-  ACTIONS_STEP_DEBUG: true
-
 jobs:
   build:
     name: Build and Push Docker Image to ECR
@@ -31,16 +27,27 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      - name: Retrieve AWS Account ID
-        id: aws_account
+      - name: Check if repository exists
+      id: check_repo
         run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
-          echo "Account ID: $ACCOUNT_ID"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          if aws ecr describe-repositories --repository-names "${{ github.repository }}" > /dev/null 2>&1; then
+            echo "Repository exists: ${{ github.repository }}"
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "Repository does not exist: ${{ github.repository }}"
+            echo "exists=false" >> $GITHUB_ENV
+  
+      - name: Create repository if it doesn't exist
+        if: env.exists == 'false'
+        run: |
+          aws ecr create-repository --repository-name "${{ github.repository }}"
+          echo "Created repository: ${{ github.repository }}"
+
+      - name: Set ECR Path Variable
+        id: ecr_path
+        run: |
+          ECR_PATH="$AWS_ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}"
+          echo "ECR_PATH=$ECR_PATH" >> $GITHUB_ENV
 
       - name: Fazendo build do projeto
         run: mvn clean install
@@ -48,35 +55,18 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Check if repository exists
-        id: check_repo
-        run: |
-          REPO_NAME="${{ github.repository }}"
-          if aws ecr describe-repositories --repository-names "$REPO_NAME" > /dev/null 2>&1; then
-            echo "Repository exists: $REPO_NAME"
-            echo "exists=true" >> $GITHUB_ENV
-          else
-            echo "Repository does not exist: $REPO_NAME"
-            echo "exists=false" >> $GITHUB_ENV
-          fi
-
-      - name: Create repository if it doesn't exist
-        if: env.exists == 'false'
-        run: |
-          REPO_NAME="${{ github.repository }}"
-          aws ecr create-repository --repository-name "$REPO_NAME"
-          echo "Created repository: $REPO_NAME"
+      
 
       - name: Build Docker image
         run: |
-          echo "Building Docker image with Account ID: $ACCOUNT_ID"
+          echo "Building Docker image with ECR Path: $ECR_PATH"
           docker build -t ${{ github.repository }}:${{ github.sha }} .
-          docker tag ${{ github.repository }}:${{ github.sha }} $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          docker tag ${{ github.repository }}:${{ github.sha }} $ECR_PATH:latest
 
       - name: Push Docker image to ECR
         run: |
-          echo "Pushing Docker image to $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
-          docker push $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          echo "Pushing Docker image to $ECR_PATH"
+          docker push $ECR_PATH:latest
 
   deploy:
     name: Deploy to EKS Cluster
@@ -109,5 +99,5 @@ jobs:
 
       - name: Update pedido-api image
         run: |
-          echo "Updating deployment image to $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest"
-          kubectl set image deployment/pod-pedido-api backend-pedido-api=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ github.repository }}:latest
+          echo "Updating deployment image to $ECR_PATH:latest"
+          kubectl set image deployment/pod-pedido-api backend-pedido-api=$ECR_PATH:latest
