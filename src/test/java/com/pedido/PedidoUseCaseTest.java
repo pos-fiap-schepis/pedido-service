@@ -9,6 +9,8 @@ import com.pedido.core.exceptions.BusinessException;
 import com.pedido.core.gateways.*;
 import com.pedido.core.usecases.PedidoUseCase;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +21,10 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static com.pedido.core.enums.SituacaoPagamentoEnum.PENDENTE;
+import static com.pedido.core.enums.StatusPedidoEnum.ANDAMENTO;
+import static com.pedido.core.enums.StatusPedidoEnum.ENTREGUE;
+import static com.pedido.core.enums.StatusPedidoEnum.PRONTO;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -117,6 +123,29 @@ class PedidoUseCaseTest {
         assertNotNull(result);
         assertEquals(BigDecimal.TEN, result.getValor());
         verify(pedidoRepositoryGateway, times(1)).salvar(pedido);
+    }
+
+    @Test
+    void testObterPedidos() {
+        // Arrange
+        Pedido pedido1 = new Pedido();
+        pedido1.setStatus(PRONTO);
+        Pedido pedido2 = new Pedido();
+        pedido2.setStatus(ANDAMENTO);
+        Pedido pedido3 = new Pedido();
+        pedido3.setStatus(ENTREGUE);
+
+        when(pedidoRepositoryGateway.obterPedidos(Arrays.asList(PRONTO, ANDAMENTO, ENTREGUE)))
+                .thenReturn(Arrays.asList(pedido1, pedido2, pedido3));
+
+        // Act
+        List<Pedido> pedidos = pedidoUseCase.obterPedidos();
+
+        // Assert
+        assertThat(pedidos).hasSize(3);
+        assertThat(pedidos.get(0).getStatus()).isEqualTo(PRONTO);
+        assertThat(pedidos.get(1).getStatus()).isEqualTo(ANDAMENTO);
+        assertThat(pedidos.get(2).getStatus()).isEqualTo(ENTREGUE);
     }
 
     @Test
