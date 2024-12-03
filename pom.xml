@@ -29,8 +29,6 @@
 	<properties>
 		<java.version>17</java.version>
 		<sonar.exclusions>
-			src/main/java/com/pedido/infrastructure/converters/ClienteConverter.java,
-			src/main/java/com/pedido/infrastructure/dtos/ClienteDto.java,
 			src/main/java/com/pedido/infrastructure/dtos/ItemPedidoDto.java,
 			src/main/java/com/pedido/infrastructure/converters/ProdutoConverter.java,
 			src/main/java/com/pedido/infrastructure/dtos/ProdutoDto.java,
