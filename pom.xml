@@ -33,7 +33,8 @@
 			src/main/java/com/pedido/infrastructure/feign/config/ViolacaoDominioErrorDecoder.java,
 			src/main/java/com/pedido/infrastructure/externals/PagamentoServicoExterno.java,
 			src/main/java/com/pedido/infrastructure/externals/NotificacaoSonoraServicoExterno.java,
-			src/main/java/com/pedido/PedidoServiceApplication.java
+			src/main/java/com/pedido/PedidoServiceApplication.java,
+			src/main/java/com/pedido/infrastructure/feign/config/ExceptionHandlerController.java
 		</sonar.exclusions>
 	</properties>
 	<dependencies>
