@@ -110,3 +110,8 @@ jobs:
       - name: Atualizar imagem no deployment Kubernetes
         run: |
           kubectl set image deployment/pod-pedido-api backend-pedido-api=$ECR_PATH:latest
+
+      - name: Forçar atualização dos pods
+        run: |
+          echo "Forçando atualização do pod..."
+          kubectl rollout restart deployment/pod-pedido-api
