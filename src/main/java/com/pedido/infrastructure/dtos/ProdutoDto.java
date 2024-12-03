@@ -15,6 +15,17 @@ public class ProdutoDto {
 
     private ProdutoCategoriaEnum categoria;
 
+    public ProdutoDto() {
+    }
+
+    public ProdutoDto(String id, String nome, String descricao, BigDecimal valor, ProdutoCategoriaEnum categoria) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.valor = valor;
+        this.categoria = categoria;
+    }
+
     public String getId() {
         return id;
     }
