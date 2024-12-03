@@ -60,8 +60,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn clean install sonar:sonar \
               -Dsonar.projectKey=pedido-service \
-              -Dsonar.host.url=$SONAR_URL \
-              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.host.url=http://a9e3de64ba6eb43ad92cf1043915d4cd-372195639.us-east-1.elb.amazonaws.com:9000/ \
+              -Dsonar.login=sqa_f3ef8b27b41c89175caad03e239c8923adff56a3 \
               -Dsonar.java.binaries=target/classes
 
       - name: Log in to Amazon ECR
