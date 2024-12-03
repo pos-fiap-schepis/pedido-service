@@ -1,7 +1,5 @@
 package com.pedido.core.enums;
 
-import java.util.Optional;
-
 public enum StatusPagamentoEnum {
 
     A("APROVADO"),
@@ -16,11 +14,4 @@ public enum StatusPagamentoEnum {
         this.descricao = descricao;
     }
 
-    public static Optional<StatusPagamentoEnum> fromString(String value) {
-        try {
-            return Optional.of(StatusPagamentoEnum.valueOf(value));
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
-    }
 }
