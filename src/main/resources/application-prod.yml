@@ -13,6 +13,9 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     schemas: pedido
     url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/pedido?currentSchema=pedido
