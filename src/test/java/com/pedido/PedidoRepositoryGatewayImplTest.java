@@ -3,6 +3,7 @@ package com.pedido;
 import com.pedido.core.entities.Pedido;
 import com.pedido.core.enums.StatusPedidoEnum;
 import com.pedido.infrastructure.converters.PedidoConverter;
+import com.pedido.infrastructure.repositories.pedido.ItemPedidoEntity;
 import com.pedido.infrastructure.repositories.pedido.PedidoEntity;
 import com.pedido.infrastructure.repositories.pedido.PedidoRepository;
 import com.pedido.infrastructure.repositories.pedido.PedidoRepositoryGatewayImpl;
@@ -40,7 +41,12 @@ class PedidoRepositoryGatewayImplTest {
     void testSalvar() {
         Pedido pedido = new Pedido();
         PedidoEntity pedidoEntity = new PedidoEntity();
-        pedidoEntity.setItens(List.of());
+        ItemPedidoEntity itemPedidoEntity = new ItemPedidoEntity();
+        itemPedidoEntity.setId(1L);
+        itemPedidoEntity.setProduto("asdfas");
+        itemPedidoEntity.setQuantidade(3);
+        itemPedidoEntity.setPedido(new PedidoEntity());
+        pedidoEntity.setItens(List.of(itemPedidoEntity));
         when(pedidoConverter.converterPedidoToEntity(any(Pedido.class))).thenReturn(pedidoEntity);
         when(pedidoRepository.save(any(PedidoEntity.class))).thenReturn(pedidoEntity);
 
