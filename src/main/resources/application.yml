@@ -34,5 +34,5 @@ context:
 server:
   port: 8080
 
-URL_PRODUTO: http://localhost:8081
-URL_CLIENTE: http://localhost:8082
+URL_PRODUTO: http://a6eae173f76f04820a93d67434d4ca3b-850764870.us-east-1.elb.amazonaws.com
+URL_CLIENTE: http://a78ff534ca8ea48719f0ffdd50437d81-139039680.us-east-1.elb.amazonaws.com
