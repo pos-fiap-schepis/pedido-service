@@ -54,19 +54,15 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      - name: SonarQube Scan
+      - name: Fazendo build do projeto
         env:
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-            echo "Running SonarQube analysis..."
-            mvn sonar:sonar \
+        run: mvn clean install sonar:sonar \
               -Dsonar.projectKey=pedido-service \
               -Dsonar.host.url=$SONAR_URL \
-              -Dsonar.login=$SONAR_TOKEN          
-
-      - name: Fazendo build do projeto
-        run: mvn clean install
+              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.java.binaries=target/classes
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
