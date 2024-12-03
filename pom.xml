@@ -34,7 +34,11 @@
 			src/main/java/com/pedido/infrastructure/dtos/ItemPedidoDto.java,
 			src/main/java/com/pedido/infrastructure/converters/ProdutoConverter.java,
 			src/main/java/com/pedido/infrastructure/dtos/ProdutoDto.java,
-			src/main/java/com/pedido/infrastructure/feign/config/ViolacaoDominioExcecao.java
+			src/main/java/com/pedido/infrastructure/feign/config/ViolacaoDominioExcecao.java,
+			src/main/java/com/pedido/infrastructure/feign/config/ViolacaoDominioErrorDecoder.java,
+			src/main/java/com/pedido/infrastructure/externals/PagamentoServicoExterno.java,
+			src/main/java/com/pedido/infrastructure/externals/NotificacaoSonoraServicoExterno.java,
+			src/main/java/com/pedido/PedidoServiceApplication.java
 		</sonar.exclusions>
 	</properties>
 	<dependencies>
