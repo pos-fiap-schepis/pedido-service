@@ -32,4 +32,7 @@ context:
   url: http://localhost:8080
 
 server:
-  port: 8082
+  port: 8080
+
+URL_PRODUTO: http://localhost:8081
+URL_CLIENTE: http://localhost:8082
