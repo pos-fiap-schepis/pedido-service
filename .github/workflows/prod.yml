@@ -54,6 +54,17 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
 
+      - name: SonarQube Scan
+        env:
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+            echo "Running SonarQube analysis..."
+            mvn sonar:sonar \
+              -Dsonar.projectKey=pedido-service \
+              -Dsonar.host.url=$SONAR_URL \
+              -Dsonar.login=$SONAR_TOKEN          
+
       - name: Fazendo build do projeto
         run: mvn clean install
 
