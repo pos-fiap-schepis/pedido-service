@@ -85,7 +85,7 @@ jobs:
 
       - name: Obter endpoint do RDS e atualizar YAML
         run: |
-          RDS_HOSTNAME=$(aws rds describe-db-instances --db-instance-identifier postgres-db-fast-food --query "DBInstances[0].Endpoint.Address" --output text)
+          export RDS_HOSTNAME=$(aws rds describe-db-instances --db-instance-identifier postgres-db-fast-food --query "DBInstances[0].Endpoint.Address" --output text)
           yq eval '(.spec.template.spec.containers[].env[] | select(.name == "RDS_HOSTNAME")).value = env(RDS_HOSTNAME)' -i k8s/pod-pedido-api.yaml
 
       - name: Atualizar configuração kubeconfig para EKS
