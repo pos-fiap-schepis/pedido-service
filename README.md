@@ -69,7 +69,8 @@ Para contribuir com o projeto, siga os passos abaixo:
 3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
 4. Faça o push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
-```
+
 
 ## Sonar
+
 ![Sonar](sonar-pedido.png)
